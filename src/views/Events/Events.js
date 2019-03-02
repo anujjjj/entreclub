@@ -24,6 +24,8 @@ import {
 } from "variables/Variables.jsx";
 
 import firestore from "../../firestore";
+import firebase from "../../firestore";
+import { format } from "url";
 
 class Event extends Component {
   constructor(props) {
@@ -33,7 +35,8 @@ class Event extends Component {
       data: '',
       count: '',
       modalOpen: false,
-      modalOpenlog: false
+      modalOpenlog: false,
+      modalOpenee: false
     }
   }
 
@@ -51,11 +54,18 @@ class Event extends Component {
           this.setState({
             eventsInfo: val
           })
+          console.log("sad", moment.unix(val.Date.seconds).format("YYYY-MM-DDTHH:mm"));
           this.setState({
             decisions: val.Decisions,
             amendments: val.Amendments,
             futurescope: val.Futurescope,
-            remarks: val.Remarks
+            remarks: val.Remarks,
+            Link: val.Link,
+            Title: val.Title,
+            Agenda: val.Agenda,
+            Date:
+              moment.unix(val.Date.seconds).format("YYYY-MM-DDTHH:mm"),
+            Platform: val.Platform
           })
         }
       });
@@ -69,6 +79,22 @@ class Event extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  handleEditEvent = () => {
+    let id = this.props.match.params.id;
+    const db = firestore.firestore();
+    let va = moment(this.state.Date).valueOf();
+    let dd = firebase.firestore.Timestamp.fromMillis(va);
+    console.log("dd ", dd);
+
+    db.collection("Events").doc(id).update({
+      Link: this.state.Link,
+      Title: this.state.Title,
+      Agenda: this.state.Agenda,
+      Date: dd,
+      Platform: this.state.Platform
+    })
+    this.handleCloseee()
+  }
 
   loadBarData = () => {
     const db = firestore.firestore();
@@ -125,7 +151,6 @@ class Event extends Component {
 
   handleOpen = () => {
     console.log(this.props.match.params.id);
-
     this.setState({
       modalOpen: true
     })
@@ -152,6 +177,32 @@ class Event extends Component {
     })
   }
 
+  handleOpenee = () => {
+
+    this.setState({
+      modalOpenee: true
+    })
+  }
+
+  handleCloseee = () => {
+    this.setState({
+      modalOpenee: false
+    })
+  }
+
+  handleEESave = () => {
+    let id = this.props.match.params.id;
+    const db = firestore.firestore();
+    console.log("id ", id);
+    // db.collection("Events").doc(id).set({
+    //   Decisions: this.state.decisions,
+    //   Futurescope: this.state.futurescope,
+    //   Amendments: this.state.amendments,
+    //   Remarks: this.state.remarks
+    // }, { merge: true })
+    this.handleClose();
+  }
+
   handleMOMSave = () => {
     let id = this.props.match.params.id;
     const db = firestore.firestore();
@@ -161,7 +212,6 @@ class Event extends Component {
       Futurescope: this.state.futurescope,
       Amendments: this.state.amendments,
       Remarks: this.state.remarks
-      // title: 'update'
     }, { merge: true })
     // db.collection('Events').doc(id).collection("MOM").set(data);
     this.handleClose();
@@ -172,7 +222,6 @@ class Event extends Component {
     let data = this.state.data
     let eventsInfo = this.state.eventsInfo
     console.log(eventsInfo);
-
     return (
       <div className="content">
         <Grid fluid>
@@ -186,9 +235,7 @@ class Event extends Component {
                   {/* <Card */}
                   <p>Add Minutes of Meeting</p>
                   {/* content={ */}
-
                   <form>
-
                     <FormInputs
                       ncols={["col-md-10"]}
                       proprieties={[
@@ -256,6 +303,109 @@ class Event extends Component {
                 Close
             </Button>
               <Button variant="primary" onClick={this.handleMOMSave}>
+                Save Changes
+            </Button>
+            </Modal.Footer>
+          </Modal>
+          }
+          {this.state.modalOpenee && <Modal show={this.state.modalOpenee} onHide={this.handleCloseee}>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Event</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col md={9}>
+                  {/* <Card */}
+                  {/* content={ */}
+                  <form>
+
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          name: 'Title',
+                          label: "Title",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter event title",
+                          value: this.state.Title,
+                          onChange: this.handleChange
+                        }]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-8"]}
+                      proprieties={[
+                        {
+                          name: 'Agenda',
+                          label: "Agenda",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter agenda for the event",
+                          value: this.state.Agenda,
+                          // defaultValue: "Business",
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-8"]}
+                      proprieties={[
+                        {
+                          name: 'Date',
+                          label: "Date",
+                          type: "datetime-local",
+                          bsClass: "form-control",
+                          placeholder: "DD/MM/YY",
+                          // value: this.state.Date,
+                          defaultValue:
+                            "12/12/12 04:01",
+                          value: this.state.Date,
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-8"]}
+                      proprieties={[
+                        {
+                          name: 'Platform',
+                          label: "Platform",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Platform for the event",
+                          value: this.state.Platform,
+                          // defaultValue: "Google+",
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-8"]}
+                      proprieties={[
+                        {
+                          name: 'Link',
+                          label: "Link",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Link for the event",
+                          value: this.state.Link,
+                          // defaultValue: "Google+",
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <div className="clearfix" />
+                  </form>
+                  {/* } */}
+
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleCloseee}>
+                Close
+            </Button>
+              <Button variant="primary" onClick={this.handleEditEvent}>
                 Save Changes
             </Button>
             </Modal.Footer>
@@ -343,6 +493,7 @@ class Event extends Component {
             </Modal.Footer>
           </Modal>
           }
+
           <Row>
             <Col lg={3} sm={6}>
               <StatsCard
@@ -373,7 +524,10 @@ class Event extends Component {
                 style={{ marginBottom: '14px' }}
                 onClick={this.handleOpenlog}
               >Add Log</Button>
-
+              <Button variant="primary"
+                style={{ marginBottom: '14px' }}
+                onClick={this.handleOpenee}
+              >Edit Event</Button>
               <Card
                 title="Amount per Service"
                 category="All logs of the event considered"

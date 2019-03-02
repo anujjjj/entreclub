@@ -45,8 +45,8 @@ class CreateEvent extends Component {
 
   componentDidMount() {
     // console.log("SADSAdas ", firebase.firestore.Timestamp.fromDate("1/1/1"))
-    console.log("SADSAdas ", firebase.firestore.Timestamp.fromMillis(moment().unix()))
-    console.log(moment().unix())
+    // console.log("SADSAdas ", firebase.firestore.Timestamp.fromMillis(moment().unix()))
+    // console.log(moment().unix())
 
 
     // db.collection('Users').doc().set().then(snap => {
@@ -120,7 +120,6 @@ class CreateEvent extends Component {
                           bsClass: "form-control",
                           placeholder: "Enter event title",
                           //value: this.state.data.emailid,
-
                           onChange: this.handleChange
                         }]}
                     />
