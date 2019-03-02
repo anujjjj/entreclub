@@ -5,7 +5,7 @@ import {
   Col,
   FormGroup,
   ControlLabel,
-  FormControl
+  FormControl, Modal, Table
 } from "react-bootstrap";
 import moment from 'moment'
 import { Card } from "components/Card/Card.jsx";
@@ -29,7 +29,8 @@ class UserProfile extends Component {
       companyname: '',
       position: '',
       description: '',
-      emailid: ''
+      emailid: '',
+      modalOpenlog: false
     }
   }
 
@@ -60,11 +61,73 @@ class UserProfile extends Component {
       })
       // console.log("sad", this.state.data);
     });
-
+    this.handleUserLog()
   }
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
+  }
+
+  handleUserLog = () => {
+    const db = firestore.firestore();
+    var ref = db.collection('Users');
+    let size = 0, val = '';
+    let users = []
+    let user = []
+    let obj = ''
+    let id = this.props.match.params.id;
+    let val2 = ''
+    db.collection('Events').get().then(snap => {
+      size = snap.docs.length // will return the collection size
+      snap.docs.forEach(data => {
+        val = data.data();
+        obj = {
+          from_user: val.from_user,
+          to_user: val.to_user,
+          amount: val.amount
+        }
+        // user = Object.values(obj);
+        // users.push(user);
+        console.log("logs ", val);
+        db.collection('Events/' + val.id + '/Logs').get().then(logdoc => {
+          logdoc.docs.forEach(data2 => {
+            val2 = data2.data();
+            // console.log("val2", val2);
+            if ((val2.from_user === localStorage.getItem("emailid"))
+              || (val2.to_user === localStorage.getItem("emailid"))
+            ) {
+              obj = {
+                from_user: val2.from_user,
+                to_user: val2.to_user,
+                amount: val2.amount
+              }
+              console.log("object1", obj);
+              user = Object.values(obj);
+              users.push(user);
+              console.log("valid", users);
+            }
+          })
+        })
+
+      })
+      this.setState({
+        logData: users
+      })
+    });
+  }
+
+  handleOpenlog = () => {
+
+    this.setState({
+      modalOpenlog: true
+    })
+  }
+
+  handleCloselog = () => {
+
+    this.setState({
+      modalOpenlog: false
+    })
   }
 
   handleUpdate = () => {
@@ -85,12 +148,57 @@ class UserProfile extends Component {
 
   render() {
     let emailid = this.state.emailid;
-
+    let thArray = ["from ", "to", "amount"]
     const that = this;
     return (
       <div className="content">
         <Grid fluid>
           <Row>
+            {this.state.modalOpenlog && <Modal show={this.state.modalOpenlog} onHide={this.handleCloselog}>
+              <Modal.Header closeButton>
+                <Modal.Title>View Log</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Row>
+                  <Col md={9}>
+                    {/* <Card */}
+                    <p>Logs for the event</p>
+                    {/* content={ */}
+                    <Table striped hover>
+                      <thead>
+                        <tr>
+                          {thArray.map((prop, key) => {
+                            return <th key={key}>{prop}</th>;
+                          })}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.state.logData.map((prop, key) => {
+                          return (
+                            <tr key={key}>
+                              {prop.map((prop, key) => {
+                                if (key === 0) {
+                                  return <td key={key}>{prop}</td>
+                                }
+                                return <td key={key}>{prop}</td>;
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </Table>
+                    {/* } */}
+
+                  </Col>
+                </Row>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.handleCloselog}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            }
             <Col md={9}>
               <Card
                 title="Edit Profile"
@@ -194,6 +302,10 @@ class UserProfile extends Component {
                         </textarea>
                       </form>
                     </Col>
+                    <Button variant="primary"
+                      style={{ marginBottom: '14px', marginRight: '25px' }}
+                      onClick={this.handleOpenlog}
+                    >View Log</Button>
                     <Button bsStyle="info" pullRight fill onClick={this.handleUpdate}>
                       Update Profile
                     </Button>
