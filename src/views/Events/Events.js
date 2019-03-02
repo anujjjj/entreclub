@@ -203,6 +203,47 @@ class Event extends Component {
     this.handleClose();
   }
 
+  handleLogSave = () => {
+    const db = firestore.firestore();
+    let id = this.props.match.params.id;
+    let size = ''
+    db.collection("Events").doc(id).collection("Logs").add({
+      from_user: this.state.fromUser,
+      to_user: this.state.toUser,
+      amount: this.state.amount
+    })
+      .then(() => {
+        db.collection("Events").doc(id).get()
+          .then(snap => {
+            console.log("snap", snap);
+            let h = snap.data().amount
+            console.log("h", h);
+            if (h) {
+              console.log("parseInt(snap.data().amount", parseInt(snap.data().amount))
+              this.setState({
+                amountToBeAdded: parseInt(snap.data().amount)
+              })
+            }
+            else {
+              console.log("amountToBeAdded", 0)
+              this.setState({
+                amountToBeAdded: 0
+              })
+            }
+            console.log("amt2beadd", this.state.amountToBeAdded);
+            console.log("this.state.amountToBeAdded", this.state.amountToBeAdded);
+            console.log("this.state.amount", this.state.amount);
+            let v1 = this.state.amountToBeAdded;
+            let v2 = this.state.amount;
+            console.log("this.state.amountToBeAdded", v1)
+            console.log("this.state.amount", v2)
+            db.collection("Events").doc(id).update({
+              amount: parseInt(v1) + parseInt(v2)
+            })
+          });
+      })
+  }
+
   handleMOMSave = () => {
     let id = this.props.match.params.id;
     const db = firestore.firestore();
@@ -427,10 +468,11 @@ class Event extends Component {
                       proprieties={[
                         {
                           label: "Transaction From",
+                          name: "fromUser",
                           type: "email",
                           bsClass: "form-control",
                           placeholder: "Email id of the user",
-                          //value: this.state.data.emailid,
+                          value: this.state.fromUser,
 
                           onChange: this.handleChange
                         }]}
@@ -439,12 +481,13 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: "toUser",
                           label: "Transaction To",
                           type: "email",
                           bsClass: "form-control",
                           placeholder: "Email id of the user",
+                          value: this.state.toUser,
                           //value: this.state.data.emailid,
-
                           onChange: this.handleChange
                         }]}
                     />
@@ -452,11 +495,12 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: "serviceConsumed",
                           label: "Service consumed",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Enter Service consumed",
-                          defaultValue: "Business",
+                          value: this.state.serviceConsumed,
                           onChange: this.handleChange
                         }
                       ]}
@@ -465,13 +509,13 @@ class Event extends Component {
                       ncols={["col-md-5"]}
                       proprieties={[
                         {
+                          name: "amount",
                           label: "Amount",
                           type: "number",
                           bsClass: "form-control",
                           placeholder: "Amount",
-                          defaultValue:
-                            "0",
-                          onCha1nge: this.handleChange
+                          value: this.state.amount,
+                          onChange: this.handleChange
                         }
                       ]}
                     />
@@ -487,7 +531,7 @@ class Event extends Component {
               <Button variant="secondary" onClick={this.handleCloselog}>
                 Close
             </Button>
-              <Button variant="primary" onClick={this.handleCloselog}>
+              <Button variant="primary" onClick={this.handleLogSave}>
                 Save Changes
             </Button>
             </Modal.Footer>
