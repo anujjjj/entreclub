@@ -81,12 +81,12 @@ class CreateEvent extends Component {
     console.log("fin", firebase.firestore.Timestamp.fromMillis(va));
     let dd = firebase.firestore.Timestamp.fromMillis(va);
     var addDoc = db.collection('Events').add({
-      title: this.state.title,
-      agenda: this.state.agenda,
+      Title: this.state.title,
+      Agenda: this.state.agenda,
       Date: dd,
       // time: this.state.time,
-      platform: this.state.platform,
-      link: this.state.link
+      Platform: this.state.platform,
+      Link: this.state.link
     }).then(ref => {
       db.collection("Events").doc(ref.id).update({
         id: ref.id

@@ -51,12 +51,24 @@ class Event extends Component {
           this.setState({
             eventsInfo: val
           })
+          this.setState({
+            decisions: val.decisions,
+            amendments: val.amendments,
+            futurescope: val.futurescope,
+            remarks: val.remarks
+          })
         }
       });
     }
     );
+
     this.loadBarData();
   }
+
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
 
   loadBarData = () => {
     const db = firestore.firestore();
@@ -112,6 +124,7 @@ class Event extends Component {
   }
 
   handleOpen = () => {
+    console.log(this.props.match.params.id);
 
     this.setState({
       modalOpen: true
@@ -137,6 +150,21 @@ class Event extends Component {
     this.setState({
       modalOpenlog: false
     })
+  }
+
+  handleMOMSave = () => {
+    let id = this.props.match.params.id;
+    const db = firestore.firestore();
+    console.log("id ", id);
+    db.collection("Events").doc(id).set({
+      decisions: this.state.decisions,
+      futurescope: this.state.futurescope,
+      amendments: this.state.amendments,
+      remarks: this.state.remarks
+      // title: 'update'
+    }, { merge: true })
+    // db.collection('Events').doc(id).collection("MOM").set(data);
+    this.handleClose();
   }
 
   render() {
@@ -165,12 +193,12 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: "decisions",
                           label: "Decisions Made",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Enter Decisions made",
-                          //value: this.state.data.emailid,
-
+                          value: this.state.decisions,
                           onChange: this.handleChange
                         }]}
                     />
@@ -178,11 +206,12 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: 'futurescope',
                           label: "Future Scope",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Enter Future scope of the meeting",
-
+                          value: this.state.futurescope,
                           onChange: this.handleChange
                         }
                       ]}
@@ -191,11 +220,12 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: 'amendments',
                           label: "Amendments",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Enter Amendments",
-
+                          value: this.state.amendments,
                           onChange: this.handleChange
                         }
                       ]}
@@ -204,19 +234,16 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
+                          name: 'remarks',
                           label: "Remarks",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Enter Remarks if any",
-
+                          value: this.state.remarks,
                           onChange: this.handleChange
                         }
                       ]}
                     />
-
-                    <Button bsStyle="info" pullRight fill type="submit">
-                      Add MOM
-                  </Button>
                     <div className="clearfix" />
                   </form>
                   {/* } */}
@@ -228,7 +255,7 @@ class Event extends Component {
               <Button variant="secondary" onClick={this.handleClose}>
                 Close
             </Button>
-              <Button variant="primary" onClick={this.handleClose}>
+              <Button variant="primary" onClick={this.handleMOMSave}>
                 Save Changes
             </Button>
             </Modal.Footer>
@@ -236,25 +263,23 @@ class Event extends Component {
           }
           {this.state.modalOpenlog && <Modal show={this.state.modalOpenlog} onHide={this.handleCloselog}>
             <Modal.Header closeButton>
-              <Modal.Title>MOM</Modal.Title>
+              <Modal.Title>Add Log</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Row>
                 <Col md={9}>
                   {/* <Card */}
-                  <p>Add Minutes of Meeting</p>
-                  {/* content={ */}
-
+                  <p>Add Log</p>
                   <form>
 
                     <FormInputs
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
-                          label: "Decisions Made",
-                          type: "text",
+                          label: "Transaction From",
+                          type: "email",
                           bsClass: "form-control",
-                          placeholder: "Enter Decisions made",
+                          placeholder: "Email id of the user",
                           //value: this.state.data.emailid,
 
                           onChange: this.handleChange
@@ -264,49 +289,47 @@ class Event extends Component {
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
-                          label: "Future Scope",
-                          type: "text",
+                          label: "Transaction To",
+                          type: "email",
                           bsClass: "form-control",
-                          placeholder: "Enter Future scope of the meeting",
+                          placeholder: "Email id of the user",
+                          //value: this.state.data.emailid,
 
                           onChange: this.handleChange
-                        }
-                      ]}
+                        }]}
                     />
                     <FormInputs
                       ncols={["col-md-10"]}
                       proprieties={[
                         {
-                          label: "Amendments",
+                          label: "Service consumed",
                           type: "text",
                           bsClass: "form-control",
-                          placeholder: "Enter Amendments",
-
+                          placeholder: "Enter Service consumed",
+                          defaultValue: "Business",
                           onChange: this.handleChange
                         }
                       ]}
                     />
                     <FormInputs
-                      ncols={["col-md-10"]}
+                      ncols={["col-md-5"]}
                       proprieties={[
                         {
-                          label: "Remarks",
-                          type: "text",
+                          label: "Amount",
+                          type: "number",
                           bsClass: "form-control",
-                          placeholder: "Enter Remarks if any",
-
-                          onChange: this.handleChange
+                          placeholder: "Amount",
+                          defaultValue:
+                            "0",
+                          onCha1nge: this.handleChange
                         }
                       ]}
                     />
 
-                    <Button bsStyle="info" pullRight fill type="submit">
-                      Add MOM
-                  </Button>
+
+
                     <div className="clearfix" />
                   </form>
-                  {/* } */}
-
                 </Col>
               </Row>
             </Modal.Body>
