@@ -262,7 +262,7 @@ class Event extends Component {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     let data = this.state.data
     let eventsInfo = this.state.eventsInfo
-    console.log(eventsInfo);
+    console.log("eventsInfo", eventsInfo);
     return (
       <div className="content">
         <Grid fluid>
@@ -548,13 +548,23 @@ class Event extends Component {
               // statsIconText="Updated now"
               />
             </Col>
+
+            <Col lg={3} sm={6}>
+              <StatsCard
+                bigIcon={<i className="pe-7s-users text-success" />}
+                statsText="Total Amount"
+                statsValue={this.state.eventsInfo.amount}
+              // statsIcon={<i className="fa fa-refresh" />}
+              // statsIconText="Updated now"
+              />
+            </Col>
           </Row>
           <Row>
             < Col md={10} >
 
               <h3>{eventsInfo.Title}</h3>
               <h6>{eventsInfo.Title}</h6>
-              {/* <p>Date : {moment(eventsInfo.Date.seconds).format('DD MMM YYYY')}</p> */}
+              <p>Date : {moment(this.state.Date).format("DD   MM YYYY HH:MM")}</p>
               <p>Link  : {eventsInfo.Link}</p>
               <p>Decisions Made  : {eventsInfo.Link}</p>
               <p>Future Scope : {eventsInfo.Link}</p>
