@@ -3,6 +3,7 @@ import UserProfile from "views/UserProfile/UserProfile";
 import Statistics from "views/Statistics/Statistics"
 import TableList from "views/TableList/TableList";
 import PastEvents from 'views/PastEvents/PastEvents'
+import CreateEvent from 'views/CreateEvent/CreateEvent'
 import Events from "views/Events/Events";
 import Typography from "views/Typography/Typography";
 import Icons from "views/Icons/Icons";
@@ -45,7 +46,7 @@ const dashboardRoutes = [
     path: "/create-event",
     name: "Create Event",
     icon: "pe-7s-graph",
-    component: PastEvents
+    component: CreateEvent
   }
   // ,
   // {
