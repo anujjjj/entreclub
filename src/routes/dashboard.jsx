@@ -40,6 +40,12 @@ const dashboardRoutes = [
     name: "Past Events",
     icon: "pe-7s-graph",
     component: PastEvents
+  },
+  {
+    path: "/create-event",
+    name: "Create Event",
+    icon: "pe-7s-graph",
+    component: PastEvents
   }
   // ,
   // {
