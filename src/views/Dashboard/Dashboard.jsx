@@ -71,28 +71,29 @@ class Dashboard extends Component {
           <h3 style={{ marginTop: '-8px', marginBottom: '17px' }}>Upcoming Events</h3>
           <Row>
             {eventsInfo.map(data => (
-              <Link to={`/event/${data.id}`}>
-                < Col md={10} >
-                  <Card
-                    title={data.Title}
-                    category={data.Agenda}
-                    content={
-                      <div className="gh"
-                        style={{
-                          marginBottom: '90px'
-                        }}
-                      >
-                        <p>Date : {moment.unix(data.Date.seconds).format('DD MMM YYYY')}</p>
-                        <p>Link  : {data.Link}</p>
-                        <p>Decisions Made  : {data.Link}</p>
-                        <p>Future Scope : {data.Link}</p>
-                        <p>Remarks: {data.Remarks}</p>
-                        <p>Amendments : {data.Amendments}</p>
-                      </div>
-                    }
-                  />
-                </Col>
-              </Link>
+
+              < Col md={10} >
+                <Card
+                  title={data.Title}
+                  category={data.Agenda}
+                  content={
+                    <div className="gh"
+                      style={{
+                        marginBottom: '40px'
+                      }}
+                    >
+                      <p>Date : {moment.unix(data.Date.seconds).format('DD MMM YYYY')}</p>
+                      <p>Link  : {data.Link}</p>
+                      <p>Decisions Made  : {data.Link}</p>
+                      <p>Future Scope : {data.Link}</p>
+                      <p>Remarks: {data.Remarks}</p>
+                      <p>Amendments : {data.Amendments}</p>
+                      <Link to={`/event/${data.id}`}>
+                        <span style={{ fontWeight: "70 %", fontSize: '20px' }}>Explore</span></Link>
+                    </div>
+                  }
+                />
+              </Col>
             ))}
 
 

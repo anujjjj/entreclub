@@ -51,6 +51,8 @@ class UserProfile extends Component {
 
   render() {
     let emailid = this.state.data.emailid;
+    console.log(this.state);
+    const that = this;
     return (
       <div className="content">
         <Grid fluid>
@@ -77,7 +79,7 @@ class UserProfile extends Component {
                           type: "email",
                           bsClass: "form-control",
                           placeholder: "Email",
-                          value: { emailid },
+                          value: this.state.data.emailid,
                           disabled: true,
                           onChange: this.handleChange
                         },
