@@ -43,7 +43,7 @@ class UserProfile extends Component {
         data: data,
         firstname: data.firstname,
         lastname: data.lastname,
-        dob: data.date,
+        dob: data.dob,
         contact: data.contact,
         companyname: data.companyname,
         position: data.position,
@@ -67,7 +67,7 @@ class UserProfile extends Component {
     db.collection("Users").doc(id).update({
       firstname: this.state.firstname,
       lastname: this.state.lastname,
-      // dob: this.state.dob.toString(),
+      dob: this.state.dob,
       contact: this.state.contact,
       companyname: this.state.companyname,
       position: this.state.position,
@@ -77,7 +77,7 @@ class UserProfile extends Component {
 
   render() {
     let emailid = this.state.emailid;
-    console.log(moment(this.state.date).format("DD/MM/YYYY"));
+
     const that = this;
     return (
       <div className="content">
