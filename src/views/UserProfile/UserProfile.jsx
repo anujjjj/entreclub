@@ -7,7 +7,7 @@ import {
   ControlLabel,
   FormControl
 } from "react-bootstrap";
-
+import moment from 'moment'
 import { Card } from "components/Card/Card.jsx";
 import { FormInputs } from "components/FormInputs/FormInputs.jsx";
 import { UserCard } from "components/UserCard/UserCard.jsx";
@@ -32,26 +32,52 @@ class UserProfile extends Component {
     // let id1 = currentUser.email
     let data = ''
     let val = '';
-    let id = this.props.match.params.id == "id" ? this.props.match.params.id : id1
-    console.log(this.props.match.params.id);
+
+    console.log(this.props.match.params.id === "id");
+    let id = this.props.match.params.id === ":id" ? id1 : this.props.match.params.id
+    // console.log(id);
 
     db.collection('Users').doc(id).get().then(snap => {
       let data = snap.data();
-      console.log(data);
       this.setState({
-        data: data
+        data: data,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        dob: data.date,
+        contact: data.contact,
+        companyname: data.companyname,
+        position: data.position,
+        description: data.description,
+        emailid: data.emailid
       })
-      console.log("sad", this.state.data);
+      // console.log("sad", this.state.data);
     });
+
   }
 
   handleChange = (e) => {
     this.setState({ [e.target.name]: e.target.value })
   }
 
+  handleUpdate = () => {
+    const db = firestore.firestore();
+    let id1 = localStorage.getItem("emailid")
+    let id = this.props.match.params.id === ":id" ? id1 : this.props.match.params.id
+    // console.log("dsadsa", this.state.dob.toString());
+    db.collection("Users").doc(id).update({
+      firstname: this.state.firstname,
+      lastname: this.state.lastname,
+      // dob: this.state.dob.toString(),
+      contact: this.state.contact,
+      companyname: this.state.companyname,
+      position: this.state.position,
+      description: this.state.description
+    })
+  }
+
   render() {
-    let emailid = this.state.data.emailid;
-    console.log(this.state);
+    let emailid = this.state.emailid;
+    console.log(moment(this.state.date).format("DD/MM/YYYY"));
     const that = this;
     return (
       <div className="content">
@@ -79,23 +105,25 @@ class UserProfile extends Component {
                           type: "email",
                           bsClass: "form-control",
                           placeholder: "Email",
-                          value: this.state.data.emailid,
+                          value: this.state.emailid,
                           disabled: true,
                           onChange: this.handleChange
                         },
                         {
+                          name: "dob",
                           label: "DOB",
                           type: "date",
                           bsClass: "form-control",
-                          placeholder: "Username",
-                          value: "1/1/1",
+                          value: moment(this.state.dob).format("YYYY-MM-DD"),
                           onChange: this.handleChange
                         },
                         {
+                          name: "contact",
                           label: "Contact No",
                           type: "number",
                           bsClass: "form-control",
                           placeholder: "Number",
+                          value: this.state.contact,
                           onChange: this.handleChange
                         }
                       ]}
@@ -104,19 +132,21 @@ class UserProfile extends Component {
                       ncols={["col-md-4", "col-md-4"]}
                       proprieties={[
                         {
+                          name: "firstname",
                           label: "First name",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "First name",
-                          defaultValue: "Mike",
+                          value: this.state.firstname,
                           onChange: this.handleChange
                         },
                         {
+                          name: "lastname",
                           label: "Last name",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Last name",
-                          defaultValue: "Andrew",
+                          value: this.state.lastname,
                           onChange: this.handleChange
                         }
                       ]}
@@ -125,19 +155,22 @@ class UserProfile extends Component {
                       ncols={["col-md-7", "col-md-5"]}
                       proprieties={[
                         {
+                          name: "companyname",
                           label: "Company Name",
                           type: "text",
                           bsClass: "form-control",
                           placeholder: "Company Name",
-                          defaultValue:
-                            "XYZ",
+                          value: this.state.companyname,
                           onChange: this.handleChange
                         },
                         {
+                          name: "position",
                           label: "Position",
                           type: "text",
                           bsClass: "form-control",
-                          placeholder: "Position"
+                          placeholder: "Position",
+                          value: this.state.position,
+                          onChange: this.handleChange
                         }
                       ]}
                     />
@@ -148,16 +181,18 @@ class UserProfile extends Component {
                         <FormGroup controlId="formControlsTextarea">
                           <ControlLabel>Description</ControlLabel>
                           <FormControl
+                            name="description"
                             rows="5"
                             componentClass="textarea"
                             bsClass="form-control"
                             placeholder="Here can be your description"
-                            defaultValue="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
+                            value={this.state.description}
+                            onChange={this.state.handleChange}
                           />
                         </FormGroup>
                       </Col>
                     </Row>
-                    <Button bsStyle="info" pullRight fill type="submit">
+                    <Button bsStyle="info" pullRight fill onClick={this.handleUpdate}>
                       Update Profile
                     </Button>
                     <div className="clearfix" />
