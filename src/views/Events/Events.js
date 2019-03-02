@@ -221,6 +221,7 @@ class Event extends Component {
         obj = {
           from_user: val.from_user,
           to_user: val.to_user,
+          service_consumed: val.service_consumed,
           amount: val.amount
         }
         user = Object.values(obj);
@@ -306,7 +307,7 @@ class Event extends Component {
     let data = this.state.data
     let eventsInfo = this.state.eventsInfo
     console.log("eventsInfo", eventsInfo);
-    let thArray = ["From User", "To User", "Amount"];
+    let thArray = ["From User", "To User", "Service", "Amount"];
     return (
       <div className="content" >
         <Grid fluid>

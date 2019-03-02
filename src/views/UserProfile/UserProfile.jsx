@@ -84,6 +84,7 @@ class UserProfile extends Component {
         obj = {
           from_user: val.from_user,
           to_user: val.to_user,
+          service_consumed: val.service_consumed,
           amount: val.amount
         }
         // user = Object.values(obj);
@@ -99,6 +100,7 @@ class UserProfile extends Component {
               obj = {
                 from_user: val2.from_user,
                 to_user: val2.to_user,
+                service: val2.service_consumed,
                 amount: val2.amount
               }
               console.log("object1", obj);
@@ -148,7 +150,7 @@ class UserProfile extends Component {
 
   render() {
     let emailid = this.state.emailid;
-    let thArray = ["from ", "to", "amount"]
+    let thArray = ["from ", "to", "service", "amount"]
     const that = this;
     return (
       <div className="content">
