@@ -563,13 +563,12 @@ class Event extends Component {
             < Col md={10} >
 
               <h3>{eventsInfo.Title}</h3>
-              <h6>{eventsInfo.Title}</h6>
+              
+              <p>Agenda  : {eventsInfo.Agenda}</p>              
               <p>Date : {moment(this.state.Date).format("DD   MM YYYY HH:MM")}</p>
+              <p>Platform  : {eventsInfo.Platform}</p>
               <p>Link  : {eventsInfo.Link}</p>
-              <p>Decisions Made  : {eventsInfo.Link}</p>
-              <p>Future Scope : {eventsInfo.Link}</p>
-              <p>Remarks: {eventsInfo.Remarks}</p>
-              <p>Amendments : {eventsInfo.Amendments}</p>
+             
               <Button variant="primary"
                 style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpen}
