@@ -54,6 +54,7 @@ class SignIn extends Component {
       if (!didEmailInDbMatch) {
         await this.setState({
           message: 'No user found by that email',
+          loading: false
         })
       } else {
 
@@ -65,6 +66,7 @@ class SignIn extends Component {
     } catch (err) {
       await this.setState({
         message: err.message,
+        loading: false
       })
     }
   }
@@ -78,6 +80,9 @@ class SignIn extends Component {
 
     if (!this.handleValidation()) {
       // alert("Form has errors");
+      this.setState({
+        loading: false
+      })
     }
     else {
       const { email, password } = this.state;
@@ -126,6 +131,7 @@ class SignIn extends Component {
                     or
             </p>
                   <Link to="/registration" class="btn btn-block btn-success" tabindex="5">Create account</Link> */}
+                  <center><span className="validn " style={{ color: "red", marginBottom: '-15px' }}>{this.state.message}</span></center>
                 </form>
               </div>
             </div>
