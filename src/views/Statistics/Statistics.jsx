@@ -74,7 +74,7 @@ class Statistics extends Component {
         val = data.data();
         console.log(val);
         amt.push({
-          name: val.Title, date: moment(val.Date.seconds).format('DD MMM YY'), amount: val.amount
+          name: val.Title, date: moment.unix(val.Date.seconds).format('DD MMM YY'), amount: val.amount
           // name: 'Event', uv: 1, pv: val.amount
         })
       });

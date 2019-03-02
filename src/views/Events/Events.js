@@ -561,15 +561,15 @@ class Event extends Component {
               <p>Remarks: {eventsInfo.Remarks}</p>
               <p>Amendments : {eventsInfo.Amendments}</p>
               <Button variant="primary"
-                style={{ marginBottom: '14px' }}
+                style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpen}
               >MOM</Button>
               <Button variant="primary"
-                style={{ marginBottom: '14px' }}
+                style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpenlog}
               >Add Log</Button>
               <Button variant="primary"
-                style={{ marginBottom: '14px' }}
+                style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpenee}
               >Edit Event</Button>
               <Card
