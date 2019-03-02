@@ -58,9 +58,10 @@ class Statistics extends Component {
     }
     );
     console.log(size);
-    this.loadBarData();
+    // this.loadBarData();
     this.loadPie();
     this.loadLineChart();
+    this.loadCategoryData();
   }
 
   loadLineChart = () => {
@@ -100,10 +101,10 @@ class Statistics extends Component {
       snap.docs.forEach(data => {
         val = data.data();
         if (val.gender === "Female") {
-          males++;
+          females++;
         }
         else {
-          females++;
+          males++;
         }
       });
       this.setState({
@@ -116,40 +117,73 @@ class Statistics extends Component {
     })
   }
 
-
-
-  loadBarData = () => {
+  loadCategoryData = () => {
     const db = firestore.firestore();
     let size = 0;
     let amt = [];
     let val = '', k = '';
     let labels = [];
     let values = [];
-    db.collection('Events/1/Logs').get().then(snap => {
+
+    db.collection('Users').get().then(snap => {
       size = snap.docs.length // will return the collection size      
       snap.docs.forEach(data => {
         val = data.data();
         // console.log(val);
-        if (amt[val.service_consumed])
-          amt[val.service_consumed] += val.amount;
+        if (amt[val.business_category])
+          amt[val.business_category] += 1;
         else
-          amt[val.service_consumed] = val.amount;
+          amt[val.business_category] = 1;
       });
       let i = 1;
       for (k in amt) {
         console.log(k, amt[k]);
         labels.push({
-          name: k, uv: i, pv: amt[k]
+          name: k, uv: i, pv: amt[k], amt: amt[k]
         });
         i++;
         values.push(amt[k]);
       }
+      console.log(labels);
       this.setState({
-        data: labels
+        databar: labels
       })
     }
     );
   }
+
+  // loadBarData = () => {
+  // const db = firestore.firestore();
+  // let size = 0;
+  // let amt = [];
+  // let val = '', k = '';
+  // let labels = [];
+  // let values = [];
+  // db.collection('Events/1/Logs').get().then(snap => {
+  //   size = snap.docs.length // will return the collection size      
+  //   snap.docs.forEach(data => {
+  //     val = data.data();
+  //     // console.log(val);
+  //     if (amt[val.service_consumed])
+  //       amt[val.service_consumed] += val.amount;
+  //     else
+  //       amt[val.service_consumed] = val.amount;
+  //   });
+  //   let i = 1;
+  //   for (k in amt) {
+  //     console.log(k, amt[k]);
+  //     labels.push({
+  //       name: k, uv: i, pv: amt[k]
+  //     });
+  //     i++;
+  //     values.push(amt[k]);
+  //   }
+  //   this.setState({
+  //     data: labels
+  //   })
+  // }
+  // );
+  // }
 
   render() {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
@@ -207,23 +241,30 @@ class Statistics extends Component {
               />
             </Col>
 
-
-            <Col md={6}>
+            <Col md={10}>
               <Card
-                title="Male Female"
-                category="Male Female"
+                title="Entrepreneurs per Business Category"
                 content={
                   <div className="ct-chart"
                     style={{
-                      marginBottom: '120px',
-                      marginTop: '-40px'
+                      marginBottom: '90px'
                     }}
                   >
-                    <ResponsiveContainer height={500}>
-                      <PieChart width={500} height={500}>
-                        <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={100} fill="#8884d8" label />
+                    <ResponsiveContainer height={300}>
+                      <BarChart
+                        data={this.state.databar}
+                        margin={{
+                          top: 10, right: 10, left: 30, bottom: 65,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
                         <Tooltip />
-                      </PieChart>
+                        <Legend />
+                        <Bar dataKey="amt" stackId="a" fill="#8884d8" />
+                        {/* <Bar dataKey="name" stackId="a" fill="#82ca9d" /> */}
+                      </BarChart>
                     </ResponsiveContainer>
                   </div>
                 }
