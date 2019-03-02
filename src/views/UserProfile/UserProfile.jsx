@@ -21,7 +21,15 @@ class UserProfile extends Component {
     super(props);
     this.state = {
       err: '',
-      data: ''
+      data: '',
+      firstname: '',
+      lastname: '',
+      dob: '',
+      contact: '',
+      companyname: '',
+      position: '',
+      description: '',
+      emailid: ''
     }
   }
 
@@ -175,23 +183,17 @@ class UserProfile extends Component {
                       ]}
                     />
 
-
-                    <Row>
-                      <Col md={12}>
-                        <FormGroup controlId="formControlsTextarea">
-                          <ControlLabel>Description</ControlLabel>
-                          <FormControl
-                            name="description"
-                            rows="5"
-                            componentClass="textarea"
-                            bsClass="form-control"
-                            placeholder="Here can be your description"
-                            value={this.state.description}
-                            onChange={this.state.handleChange}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                    <Col md={12}>
+                      <form>
+                        <label>Description</label>
+                        <textarea
+                          name="description"
+                          onChange={this.state.handleChange}
+                          value={this.state.description}
+                          rows="4" fluid style={{ width: "100%" }}>
+                        </textarea>
+                      </form>
+                    </Col>
                     <Button bsStyle="info" pullRight fill onClick={this.handleUpdate}>
                       Update Profile
                     </Button>

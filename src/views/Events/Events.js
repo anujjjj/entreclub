@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Button, Modal } from "react-bootstrap";
 import { StatsCard } from "components/StatsCard/StatsCard.jsx";
 import { Card } from "components/Card/Card.jsx";
 import moment from 'moment';
+import { FormInputs } from "components/FormInputs/FormInputs.jsx";
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Sector
@@ -30,7 +31,8 @@ class Event extends Component {
     this.state = {
       eventsInfo: '',
       data: '',
-      count: ''
+      count: '',
+      modalOpen: false
     }
   }
 
@@ -108,6 +110,20 @@ class Event extends Component {
     );
   }
 
+  handleOpen = () => {
+
+    this.setState({
+      modalOpen: true
+    })
+  }
+
+  handleClose = () => {
+
+    this.setState({
+      modalOpen: false
+    })
+  }
+
   render() {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     let data = this.state.data
@@ -117,6 +133,92 @@ class Event extends Component {
     return (
       <div className="content">
         <Grid fluid>
+          {this.state.modalOpen && <Modal show={this.state.modalOpen} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>MOM</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col md={9}>
+                  {/* <Card */}
+                  <p>Add Minutes of Meeting</p>
+                  {/* content={ */}
+
+                  <form>
+
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Decisions Made",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Decisions made",
+                          //value: this.state.data.emailid,
+
+                          onChange: this.handleChange
+                        }]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Future Scope",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Future scope of the meeting",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Amendments",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Amendments",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Remarks",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Remarks if any",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+
+                    <Button bsStyle="info" pullRight fill type="submit">
+                      Add MOM
+                  </Button>
+                    <div className="clearfix" />
+                  </form>
+                  {/* } */}
+
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleClose}>
+                Close
+            </Button>
+              <Button variant="primary" onClick={this.handleClose}>
+                Save Changes
+            </Button>
+            </Modal.Footer>
+          </Modal>
+          }
           <Row>
             <Col lg={3} sm={6}>
               <StatsCard
@@ -139,6 +241,11 @@ class Event extends Component {
               <p>Future Scope : {eventsInfo.Link}</p>
               <p>Remarks: {eventsInfo.Remarks}</p>
               <p>Amendments : {eventsInfo.Amendments}</p>
+              <Button variant="primary"
+                style={{ marginBottom: '14px' }}
+                onClick={this.handleOpen}
+              >MOM</Button>
+
               <Card
                 title="Amount per Service"
                 category="All logs of the event considered"
