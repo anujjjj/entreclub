@@ -32,7 +32,8 @@ class Event extends Component {
       eventsInfo: '',
       data: '',
       count: '',
-      modalOpen: false
+      modalOpen: false,
+      modalOpenlog: false
     }
   }
 
@@ -121,6 +122,20 @@ class Event extends Component {
 
     this.setState({
       modalOpen: false
+    })
+  }
+
+  handleOpenlog = () => {
+
+    this.setState({
+      modalOpenlog: true
+    })
+  }
+
+  handleCloselog = () => {
+
+    this.setState({
+      modalOpenlog: false
     })
   }
 
@@ -219,6 +234,92 @@ class Event extends Component {
             </Modal.Footer>
           </Modal>
           }
+          {this.state.modalOpenlog && <Modal show={this.state.modalOpenlog} onHide={this.handleCloselog}>
+            <Modal.Header closeButton>
+              <Modal.Title>MOM</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col md={9}>
+                  {/* <Card */}
+                  <p>Add Minutes of Meeting</p>
+                  {/* content={ */}
+
+                  <form>
+
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Decisions Made",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Decisions made",
+                          //value: this.state.data.emailid,
+
+                          onChange: this.handleChange
+                        }]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Future Scope",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Future scope of the meeting",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Amendments",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Amendments",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+                    <FormInputs
+                      ncols={["col-md-10"]}
+                      proprieties={[
+                        {
+                          label: "Remarks",
+                          type: "text",
+                          bsClass: "form-control",
+                          placeholder: "Enter Remarks if any",
+
+                          onChange: this.handleChange
+                        }
+                      ]}
+                    />
+
+                    <Button bsStyle="info" pullRight fill type="submit">
+                      Add MOM
+                  </Button>
+                    <div className="clearfix" />
+                  </form>
+                  {/* } */}
+
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleCloselog}>
+                Close
+            </Button>
+              <Button variant="primary" onClick={this.handleCloselog}>
+                Save Changes
+            </Button>
+            </Modal.Footer>
+          </Modal>
+          }
           <Row>
             <Col lg={3} sm={6}>
               <StatsCard
@@ -245,6 +346,10 @@ class Event extends Component {
                 style={{ marginBottom: '14px' }}
                 onClick={this.handleOpen}
               >MOM</Button>
+              <Button variant="primary"
+                style={{ marginBottom: '14px' }}
+                onClick={this.handleOpenlog}
+              >Add Log</Button>
 
               <Card
                 title="Amount per Service"
