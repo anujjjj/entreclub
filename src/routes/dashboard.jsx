@@ -22,7 +22,7 @@ const dashboardRoutes = [
   {
     path: "/requests",
     name: "Requests",
-    icon: "pe-7s-graph",
+    icon: "pe-7s-upload",
     component: Requests
   },
   {
@@ -40,19 +40,19 @@ const dashboardRoutes = [
   {
     path: "/stats",
     name: "Statistics",
-    icon: "pe-7s-graph",
+    icon: "pe-7s-graph3",
     component: Statistics
   },
   {
     path: "/past-events",
     name: "Past Events",
-    icon: "pe-7s-graph",
+    icon: "pe-7s-note2",
     component: PastEvents
   },
   {
     path: "/create-event",
     name: "Create Event",
-    icon: "pe-7s-graph",
+    icon: "pe-7s-plus",
     component: CreateEvent
   }
   // ,
