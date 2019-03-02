@@ -83,7 +83,7 @@ class CreateEvent extends Component {
     var addDoc = db.collection('Events').add({
       title: this.state.title,
       agenda: this.state.agenda,
-      date: dd,
+      Date: dd,
       // time: this.state.time,
       platform: this.state.platform,
       link: this.state.link
