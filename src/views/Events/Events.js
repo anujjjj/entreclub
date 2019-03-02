@@ -52,10 +52,10 @@ class Event extends Component {
             eventsInfo: val
           })
           this.setState({
-            decisions: val.decisions,
-            amendments: val.amendments,
-            futurescope: val.futurescope,
-            remarks: val.remarks
+            decisions: val.Decisions,
+            amendments: val.Amendments,
+            futurescope: val.Futurescope,
+            remarks: val.Remarks
           })
         }
       });
@@ -157,10 +157,10 @@ class Event extends Component {
     const db = firestore.firestore();
     console.log("id ", id);
     db.collection("Events").doc(id).set({
-      decisions: this.state.decisions,
-      futurescope: this.state.futurescope,
-      amendments: this.state.amendments,
-      remarks: this.state.remarks
+      Decisions: this.state.decisions,
+      Futurescope: this.state.futurescope,
+      Amendments: this.state.amendments,
+      Remarks: this.state.remarks
       // title: 'update'
     }, { merge: true })
     // db.collection('Events').doc(id).collection("MOM").set(data);
