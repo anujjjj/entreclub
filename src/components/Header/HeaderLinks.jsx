@@ -44,7 +44,7 @@ class HeaderLinks extends Component {
             noCaret
             id="basic-nav-dropdown"
           > */}
-            {/* <MenuItem eventKey={2.1}>Notification 1</MenuItem>
+          {/* <MenuItem eventKey={2.1}>Notification 1</MenuItem>
             <MenuItem eventKey={2.2}>Notification 2</MenuItem>
             <MenuItem eventKey={2.3}>Notification 3</MenuItem>
             <MenuItem eventKey={2.4}>Notification 4</MenuItem>

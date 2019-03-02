@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Row, Col, Button, Modal } from "react-bootstrap";
+import { Grid, Row, Col, Button, Modal, Table } from "react-bootstrap";
 import { StatsCard } from "components/StatsCard/StatsCard.jsx";
 import { Card } from "components/Card/Card.jsx";
 import moment from 'moment';
@@ -36,7 +36,8 @@ class Event extends Component {
       count: '',
       modalOpen: false,
       modalOpenlog: false,
-      modalOpenee: false
+      modalOpenee: false,
+      logData: []
     }
   }
 
@@ -163,6 +164,21 @@ class Event extends Component {
     })
   }
 
+  handleOpenViewLog = () => {
+    this.handleLogMount();
+    console.log(this.props.match.params.id);
+    this.setState({
+      modalOpenViewLog: true
+    })
+  }
+
+  handleCloseViewLog = () => {
+
+    this.setState({
+      modalOpenViewLog: false
+    })
+  }
+
   handleOpenlog = () => {
 
     this.setState({
@@ -188,6 +204,33 @@ class Event extends Component {
     this.setState({
       modalOpenee: false
     })
+  }
+
+  handleLogMount = () => {
+    const db = firestore.firestore();
+    var ref = db.collection('Users');
+    let size = 0, val = '';
+    let users = []
+    let user = []
+    let obj = ''
+    let id = this.props.match.params.id;
+    db.collection('Events').doc(id).collection("Logs").get().then(snap => {
+      size = snap.docs.length // will return the collection size
+      snap.docs.forEach(data => {
+        val = data.data();
+        obj = {
+          from_user: val.from_user,
+          to_user: val.to_user,
+          amount: val.amount
+        }
+        user = Object.values(obj);
+        users.push(user);
+        console.log("logs ", users);
+      })
+      this.setState({
+        logData: users
+      })
+    });
   }
 
   handleEESave = () => {
@@ -263,8 +306,9 @@ class Event extends Component {
     let data = this.state.data
     let eventsInfo = this.state.eventsInfo
     console.log("eventsInfo", eventsInfo);
+    let thArray = ["From User", "To User", "Amount"];
     return (
-      <div className="content">
+      <div className="content" >
         <Grid fluid>
           {this.state.modalOpen && <Modal show={this.state.modalOpen} onHide={this.handleClose}>
             <Modal.Header closeButton>
@@ -537,6 +581,51 @@ class Event extends Component {
             </Modal.Footer>
           </Modal>
           }
+          {this.state.modalOpenViewLog && <Modal show={this.state.modalOpenViewLog} onHide={this.handleCloseViewLog}>
+            <Modal.Header closeButton>
+              <Modal.Title>View Log</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col md={9}>
+                  {/* <Card */}
+                  <p>Logs for the event</p>
+                  {/* content={ */}
+                  <Table striped hover>
+                    <thead>
+                      <tr>
+                        {thArray.map((prop, key) => {
+                          return <th key={key}>{prop}</th>;
+                        })}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.logData.map((prop, key) => {
+                        return (
+                          <tr key={key}>
+                            {prop.map((prop, key) => {
+                              if (key === 0) {
+                                return <td key={key}>{prop}</td>
+                              }
+                              return <td key={key}>{prop}</td>;
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                  {/* } */}
+
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleCloseViewLog}>
+                Close
+            </Button>
+            </Modal.Footer>
+          </Modal>
+          }
 
           <Row>
             <Col lg={3} sm={6}>
@@ -563,12 +652,12 @@ class Event extends Component {
             < Col md={10} >
 
               <h3>{eventsInfo.Title}</h3>
-              
-              <p>Agenda  : {eventsInfo.Agenda}</p>              
+
+              <p>Agenda  : {eventsInfo.Agenda}</p>
               <p>Date : {moment(this.state.Date).format("DD   MM YYYY HH:MM")}</p>
               <p>Platform  : {eventsInfo.Platform}</p>
               <p>Link  : {eventsInfo.Link}</p>
-             
+
               <Button variant="primary"
                 style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpen}
@@ -581,6 +670,10 @@ class Event extends Component {
                 style={{ marginBottom: '14px', marginRight: '25px' }}
                 onClick={this.handleOpenee}
               >Edit Event</Button>
+              <Button variant="primary"
+                style={{ marginBottom: '14px', marginRight: '25px' }}
+                onClick={this.handleOpenViewLog}
+              >View Log</Button>
               <Card
                 title="Amount per Service"
                 category="All logs of the event considered"
