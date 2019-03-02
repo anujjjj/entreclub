@@ -34,7 +34,7 @@ class TableList extends Component {
           contact: val.contact,
           compname: val.companyname,
           city: val.city,
-          dob: moment.unix(val.dob.seconds).format("DD MM YYYY")
+          dob: moment(val.dob).format("DD MM YYYY")
         }
         user = Object.values(obj);
         users.push(user);
