@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Table, Button } from "react-bootstrap";
 import { Card } from "components/Card/Card.jsx";
 import moment from 'moment';
 import {
@@ -27,74 +27,122 @@ class Requests extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventsInfo: []
+      users: []
     }
   }
 
-  componentDidMount() {
 
-    if (!localStorage.getItem("isAuthenticated")) {
-      this.props.history.replace("/signin");
-    }
+
+  componentDidMount() {
 
     const db = firestore.firestore();
     var ref = db.collection('Users');
     let size = 0, val = '';
-    let events = []
-    db.collection('Events').get().then(snap => {
+    let users = []
+    let user = []
+    let obj = ''
+    let id = this.props.match.params.id;
+    db.collection('Users').get().then(snap => {
       size = snap.docs.length // will return the collection size
       snap.docs.forEach(data => {
         val = data.data();
-        if (moment.unix(val.Date.seconds) - moment() > 0)
-          events.push(val);
+        if (val.flag === "0") {
+          obj = {
+            emailid: val.emailid
+          }
+          user = Object.values(obj);
+          users.push(user);
+          console.log(users);
+        }
       });
-      events.sort(function (a, b) {
-        return new Date(moment.unix(a.Date.seconds)) - new Date(moment.unix(b.Date.seconds));
-      });
-      size = 1;
       this.setState({
-        eventsInfo: events
+        users: users
       })
-    }
-    );
+
+    });
   }
 
-
+  handleClick = (props, val) => {
+    console.log(props);
+    const db = firestore.firestore();
+    db.collection("Users").doc(props[0]).update({
+      flag: val
+    }).then(() => {
+      let u = []
+      u = u.filter(function (item) {
+        return item !== props
+      })
+      console.log(u);
+      this.setState({
+        users: u
+      })
+    })
+  }
 
   render() {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-    let eventsInfo = this.state.eventsInfo
-    console.log(eventsInfo);
+
+    // console.log(users);
+    // console.log(eventsInfo);
     return (
       <div className="content">
         <Grid fluid>
-          <h3 style={{ marginTop: '-8px', marginBottom: '17px' }}>Upcoming Events</h3>
           <Row>
-            {eventsInfo.map(data => (
+            <Col md={12}>
+              <Card
+                title="Requests"
+                category="List of pending requests"
+                ctTableFullWidth
+                ctTableResponsive
+                content={
+                  <Table striped hover>
+                    <thead>
+                      <tr>
+                        <td>Users</td>
+                        <td>Accept</td>
+                        <td>Decline</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.state.users.map((prop, key) => {
+                        return (
+                          <tr key={key}>
+                            {prop.map((prop, key) => {
+                              if (key === 0) {
+                                return <Link to={`/user/${prop}`} ><td key={key}>{prop}</td></Link>
+                              }
+                              return <td key={key}>{prop}</td>;
+                            })}
+                            <td key={2}>
+                              <Button className="primary"
+                                style={{
+                                  color: "blue",
+                                  backgroundColor: "red"
+                                }}
+                                onClick={() => this.handleClick(prop, "1")}
+                              >Accept
+                              </Button>
+                            </td>
+                            <td key={3}>
+                              <Button className="primary"
+                                onClick={() => this.handleClick(prop, "2")}
+                                style={{
+                                  color: "blue",
+                                  backgroundColor: "red"
+                                }}
+                              >
+                                Decline</Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                }
+              />
 
-              < Col md={10} >
-                <Card
-                  title={data.Title}
-                  category={data.Agenda}
-                  content={
-                    <div className="gh"
-                      style={{
-                        marginBottom: '40px'
-                      }}
-                    >
-                      <p>Date : {moment.unix(data.Date.seconds).format('DD MMM YYYY')}</p>
-                      <p>Link  : {data.Link}</p>
-                      <p>Decisions Made  : {data.Link}</p>
-                      <p>Future Scope : {data.Link}</p>
-                      <p>Remarks: {data.Remarks}</p>
-                      <p>Amendments : {data.Amendments}</p>
-                      <Link to={`/event/${data.id}`}>
-                        <span style={{ fontWeight: "70 %", fontSize: '20px' }}>Explore</span></Link>
-                    </div>
-                  }
-                />
-              </Col>
-            ))}
+            </Col>
+
 
 
           </Row>
