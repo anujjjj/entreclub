@@ -117,7 +117,7 @@ class Requests extends Component {
                               <Button className="primary"
                                 style={{
                                   color: "blue",
-                                  backgroundColor: "red"
+                                  backgroundColor: "green"
                                 }}
                                 onClick={() => this.handleClick(prop, "1")}
                               >Accept

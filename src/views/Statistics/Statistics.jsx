@@ -196,7 +196,7 @@ class Statistics extends Component {
             <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-users text-success" />}
-                statsText="Total Entrepreneurs"
+                statsText="Entrepreneurs"
                 statsValue={this.state.totalEnt}
               // statsIcon={<i className="fa fa-refresh" />}
               // statsIconText="Updated now"
