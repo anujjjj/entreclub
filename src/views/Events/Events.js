@@ -189,7 +189,10 @@ class Event extends Component {
   handleCloselog = () => {
 
     this.setState({
-      modalOpenlog: false
+      modalOpenlog: false,
+      fromUser: '',
+      toUser: '',
+      amount: ''
     })
   }
 
@@ -286,6 +289,7 @@ class Event extends Component {
             })
           });
       })
+    this.handleCloselog();
   }
 
   handleMOMSave = () => {
@@ -643,7 +647,7 @@ class Event extends Component {
               <StatsCard
                 bigIcon={<i className="pe-7s-users text-success" />}
                 statsText="Total Amount"
-                statsValue={this.state.eventsInfo.amount}
+                statsValue={this.state.eventsInfo.amount ? this.state.eventsInfo.amount : 0}
               // statsIcon={<i className="fa fa-refresh" />}
               // statsIconText="Updated now"
               />
