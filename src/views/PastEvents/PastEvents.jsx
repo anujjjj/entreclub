@@ -79,10 +79,10 @@ class PastEvents extends Component {
                         marginBottom: '90px'
                       }}
                     >
-                      <p>Agenda  : {data.Agenda}</p>              
-              <p>Date : {moment(this.state.Date).format("DD   MM YYYY HH:MM")}</p>
-              <p>Platform  : {data.Platform}</p>
-              <p>Link  : {data.Link}</p>
+                      <p>Agenda  : {data.Agenda}</p>
+                      <p>Date : {moment.unix(data.Date.seconds).format("YYYY-MM-DDTHH:mm")}</p>
+                      <p>Platform  : {data.Platform}</p>
+                      <p>Link  : {data.Link}</p>
                       <Link to={`/event/${data.id}`}>
                         <span style={{ fontWeight: "70 %", fontSize: '20px' }}>Explore</span></Link>
                     </div>
